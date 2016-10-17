@@ -1,0 +1,83 @@
+REM Trouble-shooting knowledge base (troubleshoot.kb)
+
+RULE [Failure in network hardware connection]
+If [problem] = "cannot access internet" and 
+[network_connection] = "PC network port is not blinking"  
+Then [recommendation] = "Please try connecting your network cable with another LAN port"
+
+RULE [Failure in network software configuration]
+If [problem] = "cannot access internet" and 
+[network_connection] = "PC network port is blinking"  
+Then [recommendation] = "please check the proxy settings of your browser."
+
+RULE [Printer requires vendor specific drivers although detected by windows]
+If [printer_configuration] = "printer is not configured" and 
+[printer_detection] = "printer is detected by default windows drivers"  
+Then [recommendation] = "try installing vendor specific drivers"
+
+RULE [Vendor specific drivers for the printer are not working]
+If [printer_configuration] = "printer is not configured" and 
+[printer_detection] = "printer is detected by vendor specific drivers" 
+Then [recommendation] = "Try reinstalling vendor specific printer drivers and consult the vendor of your printer."
+
+RULE [Printer is not working although it is properly plugged in]
+If [printer_error] = "printer malfunction" and 
+[power_for_printer] = "printer power button indicates switched on"
+Then [printer_configuration] = "printer is not configured"
+
+RULE [Printer is not working because it is not properly plugged in]
+If [printer_error] = "printer malfunction" and 
+[power_for_printer] = "printer power button is switched off"
+Then [recommendation] = "please make sure your printer is properly plugged in"
+
+RULE [Printer is not working due to bad cartridge]
+If [printer_error] = "printing a blank page" and 
+[cartridge_level] = "cartridge is old"
+Then [recommendation] = "please refill or install a new cartridge"
+
+RULE [Printer is not working although a new cartridge is installed]
+If [printer_error] = "printing a blank page" and 
+[cartridge_level] = "cartridge is new"
+Then [printer_configuration] = "printer is not configured"
+
+RULE [Printer is printing a blank page]
+If [problem] = "unable to take a printout" and 
+[printer_observation] = "printing a blank page"
+Then [printer_error] = "printing a blank page"
+
+RULE [Printer cannot be used]
+If [problem] = "unable to take a printout" and 
+[printer_observation] = "cannot make it print anything"
+Then [printer_error] = "printer malfunction"
+
+PROMPT [printer_observation] MultChoice
+"What is wrong with your printer ?"
+"printing a blank page"
+"cannot make it print anything"
+
+PROMPT [cartridge_level] MultChoice CF
+"What is the status of the cartridge ?"
+"cartridge is old"
+"cartridge is new"
+
+PROMPT [problem] MultChoice
+"What is the problem with your computer ?"
+"unable to take a printout"
+"cannot access internet" 
+
+PROMPT [power_for_printer] MultChoice
+"What is the status of power supply for the printer? "
+"printer power button is switched off"
+"printer power button indicates switched on"
+
+PROMPT [printer_detection] MultChoice CF
+"Are the relevant drivers installed in your machine? "
+"printer is detected by default windows drivers"
+"printer is detected by vendor specific drivers"
+
+PROMPT [network_connection] MultChoice
+"What is the status of your PC network port? "
+"PC network port is blinking"
+"PC network port is not blinking"
+
+GOAL [recommendation]
